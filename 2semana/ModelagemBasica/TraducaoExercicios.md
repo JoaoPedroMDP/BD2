@@ -20,3 +20,6 @@ Para cada um dos diagramas DER do exercício 1, elabore o Modelo Relacional
 
 ## Exercício 3
 Para cada um dos modelos do exercício 2, elabore o script DDL
+
+
+> Traduções verificadas
