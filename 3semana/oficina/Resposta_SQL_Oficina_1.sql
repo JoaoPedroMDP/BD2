@@ -1,10 +1,15 @@
 CREATE TABLE funcionario(
 	cod number(5),
 	nome varchar(100),
-	telefone varchar(25),
 	CONSTRAINT pk_func PRIMARY KEY (cod)
 );
 
+create table telefone(
+	cod_func number(5),
+	telefone varchar(25),
+	CONSTRAINT pk_tel PRIMARY KEY (cod_func, telefone),
+	CONSTRAINT fk_func FOREIGN KEY (cod_func) REFERENCES funcionario (cod)
+);
 
 CREATE TABLE departamento(
 	cod number(5),
@@ -84,7 +89,7 @@ CREATE TABLE lote(
 	quantidade NUMBER (10),
 	data_producao DATE,
 	
-	CONSTRAINT pk_lote PRIMARY KEY (cod_func, cod_peca),
+	CONSTRAINT pk_lote PRIMARY KEY (cod_func, cod_peca, data_producao),
 	CONSTRAINT fk_prod_lote FOREIGN KEY (cod_func) REFERENCES producao (cod_func),
 	CONSTRAINT fk_peca FOREIGN KEY (cod_peca) REFERENCES peca (cod)
 );
@@ -92,13 +97,13 @@ CREATE TABLE lote(
 CREATE TABLE compra(
 	cod_func NUMBER (5),
 	cod_peca NUMBER (5),
-
+	data_producao data,
 	cod_cliente NUMBER (5),
 	
 	quantidade NUMBER (10),
 	data_compra DATE,
 	
-	CONSTRAINT pk_compra PRIMARY KEY (cod_func, cod_peca, cod_cliente),
-	CONSTRAINT fk_lote FOREIGN KEY (cod_func, cod_peca) REFERENCES lote (cod_func, cod_peca),
+	CONSTRAINT pk_compra PRIMARY KEY (cod_func, cod_peca, data_producao, cod_cliente, data_compra),
+	CONSTRAINT fk_lote FOREIGN KEY (cod_func, cod_peca, data_producao) REFERENCES lote (cod_func, cod_peca, data_producao),
 	CONSTRAINT fk_cliente FOREIGN KEY (cod_cliente) REFERENCES cliente(cod)
 );
