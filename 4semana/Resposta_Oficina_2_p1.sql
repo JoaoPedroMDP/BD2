@@ -1,12 +1,12 @@
 CREATE TABLE empregado(
 	codE NUMBER (5),
-	CPF char (11),
-	RG char (9),
-	nome char (200),
-	rua char (200),
-	cidade char (100),
+	nome varchar2 (200),
+	rua varchar2 (200),
+	cidade varchar2 (100),
+	CPF varchar2 (11),
 	data_nasc DATE,
-	mae char (200),
+	RG varchar2 (9),
+	mae varchar2 (200),
 	sexo char (1),
 	
 	CONSTRAINT pk_empregado PRIMARY KEY (codE),
@@ -18,8 +18,8 @@ CREATE TABLE empregado(
 
 CREATE TABLE companhia(
 	codC NUMBER (5),
-	nome_companhia char (200),
-	cidade char (100),
+	nome_companhia varchar2 (200),
+	cidade varchar2 (100),
 	
 	CONSTRAINT pk_companhia PRIMARY KEY (codC)
 );
@@ -40,6 +40,6 @@ CREATE TABLE gerente (
 	codE_empregado NUMBER (5),
 	
 	CONSTRAINT pk_gerente PRIMARY KEY (codE_gerente, codE_empregado),
-	CONSTRAINT fk_empreago_sup FOREIGN KEY (codE_gerente) REFERENCES empregado (codE),
-	CONSTRAINT fk_empregado_sub FOREIGN KEY (codE_empregado) REFERENCES empregado (codE)
+	CONSTRAINT fk_empregado_ger FOREIGN KEY (codE_gerente) REFERENCES empregado (codE),
+	CONSTRAINT fk_empregado_emp FOREIGN KEY (codE_empregado) REFERENCES empregado (codE)
 );
