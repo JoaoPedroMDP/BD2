@@ -80,15 +80,43 @@ WHERE age BETWEEN 30 AND 50 AND e.CIDADE = 'CURITIBA'
 ORDER BY age; 
 
 ---15. Dê um aumento de 10% a todos os empregados da “Volvo”.
-UPDATE TRABALHA t SET t.salario = t.salario * 1.1
-WHERE t.codc = (SELECT c.codc FROM COMPANHIA c WHERE c.nome = UPPER('Volvo'));
-
-SELECT ROUND(t.salario * 1.1, 2) FROM TRABALHA t;
+UPDATE TRABALHA SET salario = salario * 1.1
+WHERE codc = (SELECT c.codc FROM COMPANHIA c WHERE c.nome = UPPER('Volvo'));
 
 ---16. Dê um aumento de 10% a todos os empregados da cidade de Blumenau.
+UPDATE TRABALHA t SET t.salario = t.salario * 1.1
+WHERE t.code in (
+	SELECT code FROM EMPREGADO e WHERE e.cidade = UPPER('Blumenau')
+);
 
 ---17. Exclua todos os funcionários da falida XX Corporation e depois a exclua. Antes
 ---faça um backup deste dados copiando para outra tabela.
+
+--- BACKUP COMPANHIA
+CREATE VIEW xx_corp AS
+	SELECT * FROM COMPANHIA c WHERE c.nome = UPPER('XX CORPORATION');
+
+CREATE TABLE bkp_companhia as SELECT * FROM xx_corp;
+
+--- BACKUP TRABALHA
+CREATE VIEW xx_trabalha AS
+	SELECT t.code, t.codc, t.salario FROM TRABALHA t 
+	JOIN COMPANHIA c ON c.codc = t.codc
+	WHERE c.nome = upper('XX CORPORATION');
+
+CREATE TABLE bkp_trabalha AS SELECT * FROM xx_trabalha;
+
+--- BACKUP EMPREGADO
+CREATE VIEW xx_empregado AS
+	SELECT e.code, e.nome, e.rua, e.cidade, e.cpf, e.dt_nasc, e.rg, e.mae, e.sexo FROM EMPREGADO e 
+	JOIN XX_TRABALHA x ON x.code = e.code;
+
+CREATE TABLE bkp_empregado AS SELECT * FROM xx_empregado;
+
+
+DELETE FROM companhia c WHERE c.codc = (SELECT DISTINCT codc FROM BKP_TRABALHA);
+DELETE FROM EMPREGADO e WHERE e.code in (SELECT DISTINCT code FROM BKP_TRABALHA);
+DELETE FROM trabalha t WHERE t.codc = (SELECT DISTINCT codc FROM BKP_TRABALHA);
 
 ---18. Encontre os empregados que recebam um salário maior que a média de salários das companhias.
 SELECT e.nome, t.salario FROM (
